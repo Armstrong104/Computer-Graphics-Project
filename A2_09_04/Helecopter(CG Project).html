@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>My first three.js app</title>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script>
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x2a3b4c);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.body.appendChild(renderer.domElement);
+
+
+
+
+        camera.position.set(70, 70, -120);
+
+        // default THREE.PCFShadowMap
+
+        //Create a DirectionalLight and turn on shadows for the light
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(100, 50, -90); //default; light shining from top
+        light.target.position.set(0, 0, 0);
+        light.castShadow = true; // default false
+        light.shadow.mapSize.width = 4096;
+        light.shadow.mapSize.height = 4096;
+        light.shadow.camera.near = 1.0;
+        light.shadow.camera.far = 1000.0;
+        light.shadow.camera.left = 500;
+        light.shadow.camera.right = -500;
+        light.shadow.camera.top = 500;
+        light.shadow.camera.bottom = -500;
+
+        //scene.add(new THREE.CameraHelper(light.shadow.camera));
+
+
+        const loader = new THREE.TextureLoader();
+
+        scene.add(light);
+
+
+        // const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        // scene.add(directionalLight);
+
+        const planeGeometry = new THREE.PlaneGeometry(1000, 1000, 32);
+        const planeMaterial = new THREE.MeshStandardMaterial({ wireframe: false, color: 0x808080 })
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.position.set(0, -30, 0);
+        plane.rotation.x = - Math.PI / 2;
+        plane.receiveShadow = true;
+        scene.add(plane);
+
+        const heliBody = new THREE.CapsuleGeometry(17, 17, 10, 10);
+        const heliBodyColor = new THREE.MeshStandardMaterial({ map: loader.load('/images/body_image.jpg') })
+        //const heliBodyColor = new THREE.MeshStandardMaterial({ wireframe: false, color: 0xFFFF00 })
+        const capsule = new THREE.Mesh(heliBody, heliBodyColor);
+        capsule.rotateX(1.5708);
+        capsule.castShadow = true; //default is false
+        capsule.receiveShadow = false;
+        scene.add(capsule);
+
+        const heliWing = new THREE.BoxGeometry(5, 1, 100)
+        const heliWingColor = new THREE.MeshStandardMaterial({ map: loader.load('/images/hele_wing.jpg') })
+        const cube1 = new THREE.Mesh(heliWing, heliWingColor)
+        cube1.position.set(0, 22, 0)
+        cube1.castShadow = true; //default is false
+        cube1.receiveShadow = false;
+        scene.add(cube1)
+
+        const geometry = new THREE.ConeGeometry(2, 6, 8);
+        const material = new THREE.MeshStandardMaterial({ map: loader.load('/images/body_image.jpg') });
+        const cone = new THREE.Mesh(geometry, material);
+        cone.position.set(0, 20, 0);
+        cone.castShadow = true; //default is false
+        cone.receiveShadow = false;
+        scene.add(cone);
+
+        const heliTail = new THREE.BoxGeometry(3, 1, 65)
+        const heliTailColor = new THREE.MeshStandardMaterial({ map: loader.load('/images/body_image.jpg') })
+        const cube2 = new THREE.Mesh(heliTail, heliTailColor)
+        cube2.position.set(0, 0, 40)
+        cube2.castShadow = true; //default is false
+        cube2.receiveShadow = false;
+        scene.add(cube2)
+
+        const heliStand1 = new THREE.BoxGeometry(4, 1, 45)
+        const heliStandColor1 = new THREE.MeshStandardMaterial({ map: loader.load('/images/body_image.jpg') })
+        const cube3 = new THREE.Mesh(heliStand1, heliStandColor1)
+        cube3.position.set(10, -18, -2)
+        cube3.castShadow = true; //default is false
+        cube3.receiveShadow = false;
+        scene.add(cube3)
+
+        const heliStand2 = new THREE.BoxGeometry(4, 1, 45)
+        const heliStandColor2 = new THREE.MeshStandardMaterial({ map: loader.load('/images/body_image.jpg') })
+        const cube4 = new THREE.Mesh(heliStand2, heliStandColor2)
+        cube4.position.set(-10, -18, -2)
+        cube4.castShadow = true; //default is false
+        cube4.receiveShadow = false;
+        scene.add(cube4)
+
+        // const heliStand3 = new THREE.BoxGeometry(4, 1, 25)
+        // const heliStandColor3 = new THREE.MeshStandardMaterial({ map: loader.load('/images/body_image.jpg') })
+        // const cube8 = new THREE.Mesh(heliStand3, heliStandColor3)
+        // cube8.position.set(0, -17, 0)
+        // cube8.rotateY(1.5708);
+        // cube8.castShadow = true; //default is false
+        // cube8.receiveShadow = false;
+        // //scene.add(cube8)
+
+
+        const heliStand3 = new THREE.BoxGeometry(10, 2, 1)
+        const heliStandColor3 = new THREE.MeshStandardMaterial({ map: loader.load('/images/body_image.jpg') })
+        const cube8 = new THREE.Mesh(heliStand3, heliStandColor3)
+        cube8.position.set(-5, -15,-8)
+        cube8.rotateZ(-2.5708);
+        cube8.castShadow = true; //default is false
+        cube8.receiveShadow = false;
+        scene.add(cube8)
+
+        const heliStand4 = new THREE.BoxGeometry(10, 2, 1)
+        const heliStandColor4 = new THREE.MeshStandardMaterial({ map: loader.load('/images/body_image.jpg') })
+        const stand4 = new THREE.Mesh(heliStand4, heliStandColor4)
+        stand4.position.set(-5, -15,8)
+        stand4.rotateZ(-2.5708);
+        stand4.castShadow = true; //default is false
+        stand4.receiveShadow = false;
+        scene.add(stand4)
+
+
+        const heliStand5 = new THREE.BoxGeometry(10, 2, 1)
+        const heliStandColor5 = new THREE.MeshStandardMaterial({ map: loader.load('/images/body_image.jpg') })
+        const stand5 = new THREE.Mesh(heliStand5, heliStandColor5)
+        stand5.position.set(5, -15,-8)
+        stand5.rotateZ(2.5708);
+        stand5.castShadow = true; //default is false
+        stand5.receiveShadow = false;
+        scene.add(stand5)
+
+
+        const heliStand6 = new THREE.BoxGeometry(10, 2, 1)
+        const heliStandColor6 = new THREE.MeshStandardMaterial({ map: loader.load('/images/body_image.jpg') })
+        const stand6 = new THREE.Mesh(heliStand6, heliStandColor6)
+        stand6.position.set(5, -15,8)
+        stand6.rotateZ(2.5708);
+        stand6.castShadow = true; //default is false
+        stand6.receiveShadow = false;
+        scene.add(stand6)
+
+
+    
+
+
+        const heliTailWing = new THREE.BoxGeometry(2, 1, 10)
+        const heliTaileWingColor = new THREE.MeshStandardMaterial({ map: loader.load('/images/hele_wing.jpg') })
+        const cube5 = new THREE.Mesh(heliTailWing, heliTaileWingColor)
+        cube5.position.set(-5, 0, 72)
+        cube5.castShadow = true; //default is false
+        cube5.receiveShadow = false;
+        scene.add(cube5)
+
+        const heliTailWing2 = new THREE.BoxGeometry(2, 1, 10)
+        const heliTaileWingColor2 = new THREE.MeshStandardMaterial({ map: loader.load('/images/body_image.jpg') })
+        const cube7 = new THREE.Mesh(heliTailWing2, heliTaileWingColor2)
+        cube7.position.set(0, 0, 72)
+        cube7.rotateY(1.5708);
+        cube7.castShadow = true; //default is false
+        cube7.receiveShadow = false;
+        scene.add(cube7)
+
+
+
+
+        /*Here part......*/
+
+        const heli_wind_1 = new THREE.CircleGeometry(6, 30, 3, 8);
+        const heli_wind_1_color = new THREE.MeshStandardMaterial({ map: loader.load('/images/glass_round_rotate.png') });
+        // const heli_front_window_color = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        const cube6 = new THREE.Mesh(heli_wind_1, heli_wind_1_color)
+        cube6.position.set(16.5, 0, 0)
+        cube6.rotateY(1.5708);
+        cube6.castShadow = true; //default is false
+        cube6.receiveShadow = false;
+        scene.add(cube6);
+
+
+
+        const heli_wind_2 = new THREE.CircleGeometry(6, 30, 3, 8);
+        const heli_wind_2_color = new THREE.MeshStandardMaterial({ map: loader.load('/images/glass_round_left_rotate.png') });
+        const cube9 = new THREE.Mesh(heli_wind_2, heli_wind_2_color)
+        cube9.position.set(-16.5, 0, 0)
+        cube9.rotateY(-1.5709);
+        cube9.castShadow = true; //default is false
+        cube9.receiveShadow = false;
+        scene.add(cube9);
+
+
+
+
+        //render();
+        renderer.render(scene, camera);
+
+
+
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.target.set(4.5, 0, 4.5);
+        controls.update();
+        controls.enablePan = false;
+        controls.enableDamping = true;
+
+        // movement
+        document.addEventListener("keydown", onDocumentKeyDown, false);
+        function onDocumentKeyDown(event) {
+            var keyCode = event.which;
+            // up = w
+            if (keyCode == 87) {
+                camera.position.y += 5;
+                // down = s
+            } else if (keyCode == 83) {
+                camera.position.y -= 5;
+                // left = a
+            } else if (keyCode == 65) {
+                camera.position.x -= 5;
+                // right = d
+            } else if (keyCode == 68) {
+                camera.position.x += 5;
+                //forward = q
+            } else if (keyCode == 81) {
+                camera.position.z += 5;
+                //backward = e
+            } else if (keyCode == 69) {
+                camera.position.z -= 5;
+                // space
+            } else if (keyCode == 32) {
+                camera.position.x = 0.0;
+                camera.position.y = 0.0;
+            }
+            render();
+        };
+
+
+        function animate() {
+
+            requestAnimationFrame(animate);
+            cube1.rotation.y += 0.1;
+            cube5.rotation.x += 0.1;
+
+            const time = Date.now() * 0.0005;
+            light.position.x = Math.sin(time) * 60;
+            light.position.z = Math.cos(time) * 60;
+            controls.update();
+            renderer.render(scene, camera);
+        };
+
+        animate();
+    </script>
+</body>
+
+</html>
